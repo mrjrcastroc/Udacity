@@ -7,9 +7,9 @@ For this project from Udacity I was looking to find some precious insights using
 
 I was looking to understand: 
 
-- The quantity of acccomodates, bathrooms, bedrooms and beds with the reviews
-- The relation of neighbourhood with the price
-- The relation of Occupation rate with neighbourhood
+- The number of rooms, bathrooms, and beds is related to the rating.
+- Neighbourhood is related to the price.
+- The occupancy rate is related to Neighbourhood.
 
 # File Descriptions
 There is one notebook avalailable here to answer the business questions listed above and there are 2 datasets that we will use (listings and review).
