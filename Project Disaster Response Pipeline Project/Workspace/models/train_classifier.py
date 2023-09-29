@@ -2,20 +2,19 @@ import sys
 import re
 import nltk
 import pandas as pd
-import numpy as np
 from sqlalchemy import create_engine
-from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.naive_bayes import MultinomialNB
 import warnings
+import pickle
+
 nltk.download('averaged_perceptron_tagger')
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -27,6 +26,21 @@ warnings.filterwarnings("ignore")
 lemmatizer = WordNetLemmatizer()
 
 def load_data(database_filepath):
+    '''
+    load_data
+    Load data from a sqlite database
+    
+    inputs
+    database_filepath: filepath to the sqlite database file
+
+    Returns:
+
+    X: returns the messsages data
+    Y: returns all the targets data
+    targets: returns all the category names from targets
+
+    '''
+
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table('tb_messages', engine)
     X = df.message
@@ -37,6 +51,18 @@ def load_data(database_filepath):
   
 
 def tokenize(text):
+    '''
+    tokenize
+    This function transform the text removing punctuation and normalize case, after lemmatize and removes stop words
+    
+    inputs
+    text: message text
+
+    Returns:
+
+    tokens: returns the text's tokens 
+
+    '''    
     # Normalize case and remove punctuation
     text = str(text).lower()
     text = re.sub(r'[^\w\s]', '', string = text)
@@ -48,6 +74,15 @@ def tokenize(text):
     return tokens
 
 def build_model():
+    '''
+    build_model
+    This function creates a Pipeline that applies count vectorizer and TFIDF, after creates a Naive Bayes model to each text category and optimize their hyperparameters with grid search
+    
+    Returns:
+
+    cv: Grid Search object ready to fit the model
+
+    '''        
     pipeline = Pipeline([
         ('count_vec', CountVectorizer(tokenizer = tokenize)),
         ('tfdf', TfidfTransformer()),
@@ -62,6 +97,22 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    '''
+    evaluate_model
+    This function evaluates the model's performance
+    Inputs:
+
+    model: estimator
+    X_test: messages test data
+    Y_test: category test data 
+    category_names: category names
+    
+
+    Returns:
+
+    text: performance metrics for each category model
+
+    '''      
     y_pred = model.predict(X_test)
     for i in range(36):
         print(f"{category_names[i]} category:")
@@ -69,12 +120,26 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
-    import pickle
+    '''
+    save_model
+    This function saves the model to a pickle file
+    Inputs:
+
+    model: estimator
+    model_filepath: the path you want to save the pickle file
+    
+
+    Returns:
+
+    saves a pickle file to the directory informed in the model_filepath
+
+    '''    
     with open(model_filepath, 'wb') as file:
         pickle.dump(model, file)
 
 
 def main():
+    
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))

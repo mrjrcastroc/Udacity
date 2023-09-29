@@ -5,6 +5,21 @@ from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    load_data
+    This function load data from csv files and merge to a single pandas dataframe
+    
+    Inputs:
+
+    messages_filepath: filepath to messages csv file
+    categories_filepath: filepath to categories csv file
+    
+
+    Returns:
+
+    df: dataframe merging categories and messages
+
+    '''
     # load messages dataset
     messages = pd.read_csv(messages_filepath)
     # load categories dataset
@@ -14,6 +29,18 @@ def load_data(messages_filepath, categories_filepath):
     return df 
 
 def clean_data(df):
+    '''
+    clean_data
+    This function splits the categories data and after transform each category into a binary column
+    Inputs:
+
+    df: merged dataframe 
+
+    Returns:
+
+    df: dataframe with all categories transformed into binary columns
+
+    '''    
     # create a dataframe of the 36 individual category columns
     categories =  df.categories.str.split(';', expand = True)
     # select the first row of the categories dataframe
@@ -35,9 +62,24 @@ def clean_data(df):
     df = df.drop_duplicates()
     # drop nulls
     df = df.dropna()
+    # removing the values with classification 2 in the column related
+    df = df.query('related != 2')
     return df
 
 def save_data(df, database_filename):
+    '''
+    save_data
+    This function takes a dataframe and saves the data into a sqlite database
+    Inputs:
+
+    df:  dataframe 
+    database_filename: database name
+
+    Returns:
+
+    creates the table tb_messages in the sqlite database 
+
+    '''      
     engine = create_engine(f"sqlite:///{database_filename}")
     df.to_sql('tb_messages', engine, index=False,if_exists='replace')  
 
