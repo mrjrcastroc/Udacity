@@ -1,4 +1,4 @@
-# Disaster Response Pipeline Project
+# Capstone Project: Customer Segmentation Report for Arvato Financial Solutions
 
 ### Project Description
 
