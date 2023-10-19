@@ -2,29 +2,15 @@
 
 ### Project Description
 
-In this project we use disaster data from Appen, that contains real messages that were sent during disaster events, to create a machine learning pipeline to categorize these events so that we can send the messages to an appropriate disaster relief agency.
+The project has two major steps: the customer segmentation report and the supervised learning model.
+
+1. Customer Segmentation Report
+2. I begin the project by using unsupervised learning methods to analyze attributes of established customers and the general population in order to create customer segments.
+
+3. Supervised Learning Model
+I had access to a third dataset with attributes from targets of a mail-order campaign and I use the previous analysis to build a machine learning model that predicts whether or not each individual will respond to the campaign.
 
 
-
-### File Description
-
-- Project Disaster Response Pipeline Project
-    - Workspace
-        - app 1.1
-            - run.py 1.1.1
-            - templates.tar.gz 1.1.2
-        - data 1.2
-            - DisasterResponse.db 1.2.1
-            - disaster_categories.csv 1.2.2
-            - disaster_messages.csv 1.2.3
-            - process_data.py 1.2.4
-        - models 1.3
-            - classifier.pkl 1.3.1
-            - train_classifier.py 1.3.2
-
-        README.md
-    - ETL Pipeline Preparation.ipynb
-    - ML Pipeline Preparation.ipynb
 
 ### Installation
 
